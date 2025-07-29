@@ -11,6 +11,7 @@ import { AuthProivde } from './Hooks/useAuth';
 import ProtectedRoute from './ProtectedRoute';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import NotFound from './Pages/NotFound';
 
 function App() {
   const location = useLocation();
@@ -52,6 +53,9 @@ function App() {
               <motion.div {...pageTransition}><Comment /></motion.div>
             } />
           </Route>
+          <Route path="*" element={
+            <motion.div {...pageTransition}><NotFound /></motion.div>
+          } />
         </Routes>
       </AnimatePresence>
     </AuthProivde>

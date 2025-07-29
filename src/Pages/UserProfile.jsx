@@ -21,7 +21,7 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
   const [newTag, setNewTag] = useState(null)
-  const { user, updateName } = useAuth();
+  const { user, updateName, logout } = useAuth();
   const [name, setName] = useState(user?.name || '');
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
@@ -135,7 +135,7 @@ const UserProfile = () => {
     }
   };
 
-const handleSave = () => {
+  const handleSave = () => {
     if (name && name !== user.name) {
       updateName(name);
     }
@@ -151,54 +151,70 @@ const handleSave = () => {
   return (
     <div className='m-4 lg:mx-[25%] md:mx-4 mt-20 flex flex-col'>
       <ToastContainer />
-     <div className='relative border mt-5 flex flex-col gap-2 border-gray-200 rounded-xl h-auto p-2 mx-2'>
-      <div className='flex flex-row gap-2'>
-        <div className='bg-gray-200 p-2 w-18 rounded-full'>
-          <User size={55} />
-        </div>
-        <div className='flex flex-col text-xs m-1 justify-center items-center'>
-          {editing ? (
-            <input
-              type='text'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className='text-sm min-w-44 w-[20vw] bg-gray-100 focus:outline-none rounded px-2 py-1'
-            />
-          ) : (
-            <h4 className='text-2xl'>{user.name}</h4>
-          )}
-        </div>
-      </div>
+      <div className='relative border mt-5 flex flex-col gap-2 border-gray-200 rounded-xl h-auto p-2 mx-2'>
+        <div className='flex flex-row gap-2'>
+          <div className='bg-gray-200 p-2 w-18 rounded-full'>
+            <User size={55} />
+          </div>
+          <div className='flex flex-col text-xs m-1 justify-center items-center'>
+            {editing ? (
+              <input
+                type='text'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className='text-sm min-w-44 w-[20vw] bg-gray-100 focus:outline-none rounded px-2 py-1'
+              />
+            ) : user ? (
+              <h4 className='text-2xl'>{user.name}</h4>
+            ) : (
+              <h4 className='text-2xl text-gray-400'>Loading...</h4>
+            )}
 
-      <div className='m-2'>
-        <h4 className='text-xs text-gray-500'>{posts.length} published posts</h4>
-      </div>
-
-      {editing ? (
-        <div className='absolute top-2 right-2 flex gap-2'>
-          <button
-            className='text-xs font-semibold py-1 px-2 border border-gray-300 text-black rounded-lg'
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
-          <button
-            className='text-xs font-semibold py-1 px-2 bg-black text-white rounded-lg'
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          
+          </div>
         </div>
-      ) : (
-        <button
-          className='absolute top-2 right-2 text-xs font-semibold py-1 px-2 bg-black text-white rounded-lg'
-          onClick={() => setEditing(true)}
-        >
-          Edit
-        </button>
-      )}
-    </div>
+
+        <div className='m-2'>
+          <h4 className='text-xs text-gray-500'>{posts.length} published posts</h4>
+        </div>
+
+        {editing ? (
+          <div className='absolute top-2 right-2 flex gap-2'>
+            <button
+              className='text-xs font-semibold py-1 px-2 border border-gray-300 text-black rounded-lg'
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+            <button
+              className='text-xs font-semibold py-1 px-2 bg-black text-white rounded-lg'
+              onClick={handleSave}
+            >
+              Save
+            </button>
+            <button
+              className='text-xs font-semibold py-1 px-2 bg-red-500 text-white rounded-lg'
+              onClick={() => { logout() }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          <div className='absolute top-2 right-2 flex gap-2'>
+            <button
+              className=' text-xs font-semibold py-1 px-2 bg-black text-white rounded-lg'
+              onClick={() => setEditing(true)}
+            >
+              Edit
+            </button>
+            <button
+              className='text-xs font-semibold py-1 px-2 bg-red-500 text-white rounded-lg'
+              onClick={() => { logout() }}
+            >
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
 
 
       <div className='mt-4 mx-4 flex flex-row justify-between'>

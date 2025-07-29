@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate()
 
   return (
-    <nav className='fixed top-0 left-0 right-0 z-50 bg-white flex flex-row justify-between items-center py-2 px-5 border-b border-gray-200'>
+    <nav className='fixed bg-white/30 backdrop-blur-xl top-0 left-0 right-0 z-50  flex flex-row justify-between items-center py-2 px-5 border-b border-gray-200'>
       <div className='flex flex-row gap-3 lg:mx-32 md:mx-10 cursor-pointer' onClick={() => navigate('/')}>
         <PenTool />
         <h1>Blog Space</h1>

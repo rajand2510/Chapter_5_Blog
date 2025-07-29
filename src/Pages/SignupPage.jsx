@@ -20,7 +20,7 @@ export function SignupPage() {
   };
 
   return (
-    <div className="flex items-center justify-center px-4">
+    <div className="flex items-center justify-center px-4 mt-20">
          <ToastContainer />
       <div className="w-full max-w-md bg-white justify-center my-20 rounded-lg border border-gray-200 p-6">
         <div className="text-center space-y-2 mb-6">

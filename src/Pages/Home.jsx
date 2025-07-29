@@ -57,7 +57,7 @@ const Home = () => {
 
   return (
     <div className="m-4 lg:mx-[25%] md:mx-4 flex flex-col mt-20">
-      <div>
+      <div className=''>
         <h3 className="text-xl font-semibold">Latest Blog Posts</h3>
         <h3 className="text-gray-500 font-light mt-2">
           Discover insights, tutorials, and stories from our community of writers.
@@ -79,43 +79,44 @@ const Home = () => {
       {filteredPosts.length === 0 && (
         <p className="text-center mt-10 text-gray-500">No posts found.</p>
       )}
-
-      {filteredPosts.map((post) => (
-        <div
-          key={post._id}
-          onClick={() => navigate(`/post/${post._id}`)}
-          className="cursor-pointer border mt-5 flex flex-col gap-12 border-gray-200 rounded-xl h-auto p-2 mx-2 hover:shadow-lg"
-        >
-          <div className="flex flex-row gap-2">
-            <div className="bg-gray-200 p-2 w-9 rounded-full">
-              <User size={20} />
+      <div className=' mt-2 hide-scrollbar overflow-y-auto max-h-[80vh] s'>
+        {filteredPosts.map((post) => (
+          <div
+            key={post._id}
+            onClick={() => navigate(`/post/${post._id}`)}
+            className="cursor-pointer border mt-5 flex flex-col gap-12 border-gray-200 rounded-xl h-auto p-2 mx-2 hover:shadow-lg"
+          >
+            <div className="flex flex-row gap-2">
+              <div className="bg-gray-200 p-2 w-9 rounded-full">
+                <User size={20} />
+              </div>
+              <div className="flex flex-col text-xs m-1">
+                <h4>{post.authorName || 'Unknown'}</h4>
+                <p className="text-[9px] text-gray-500">
+                  {formatDateToReadableString(post.timestamp)}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col text-xs m-1">
-              <h4>{post.authorName || 'Unknown'}</h4>
-              <p className="text-[9px] text-gray-500">
-                {formatDateToReadableString(post.timestamp)}
-              </p>
+
+            <div className="m-2">
+              <h2>{post.title}</h2>
+              <h4 className="text-sm text-gray-500">{post.description}</h4>
+              <div className="flex flex-row gap-2 mt-2">
+                {post.tags?.map((tag, i) => (
+                  <span
+                    key={i}
+                    className="inline-block bg-gray-200 text-black text-xs px-2.5 py-0.5 rounded-full"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
-
-          <div className="m-2">
-            <h2>{post.title}</h2>
-            <h4 className="text-sm text-gray-500">{post.description}</h4>
-            <div className="flex flex-row gap-2 mt-2">
-              {post.tags?.map((tag, i) => (
-                <span
-                  key={i}
-                  className="inline-block bg-gray-200 text-black text-xs px-2.5 py-0.5 rounded-full"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  );
+  ); 
 };
 
 export default Home;
