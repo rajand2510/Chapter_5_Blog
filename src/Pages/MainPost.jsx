@@ -1,14 +1,106 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import { ArrowLeft, MessageCircle, User } from 'lucide-react'
 import { Outlet, useNavigate } from 'react-router-dom'
+import './User.css'
 const MainPost = () => {
 
+    const { postId } = useParams();
+    const [post, setPost] = useState('');
+    const [commentCount, setCommentCount] = useState('');
+    const [loadingPost, setLoadingPost] = useState(true);
+    const [loadingComments, setLoadingComments] = useState(true);
+
     const navigate = useNavigate();
+
+    const handleBack = () => {
+        // If URL matches `/post/:id/comment`
+        if (/^\/post\/[^/]+\/comment$/.test(location.pathname)) {
+            navigate(-2);
+        } else {
+            navigate(-1);
+        }
+    };
+
+    useEffect(() => {
+        async function fetchPost() {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/posts/${postId}`);
+                setPost(res.data);
+            } catch (err) {
+                console.error('Failed to fetch post:', err);
+            } finally {
+                setLoadingPost(false);
+            }
+        }
+
+        async function fetchCommentCount() {
+            try {
+                const res = await axios.get(`http://localhost:5000/api/posts/${postId}/comments/count`);
+                setCommentCount(res.data.count);
+            } catch (err) {
+                console.error('Failed to fetch comment count:', err);
+            } finally {
+                setLoadingComments(false);
+            }
+        }
+
+        fetchPost();
+        fetchCommentCount();
+    }, [postId]);
+
+
+    function formatDateToReadableString(isoDateString) {
+        const date = new Date(isoDateString);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    }
+
+    console.log(post);
+
+    if (loadingPost) return <div className="flex justify-center items-center h-screen">
+        <div className="w-12 h-12 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+    </div>;
+    if (!post)
+        return (
+            <div className="flex flex-col mt-20 justify-center items-center h-screen text-center px-4 bg-white">
+                <div className="mb-8 animate-bounce">
+                    <div className="w-32 h-32 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                        <svg className="w-16 h-16 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div className="space-y-4 max-w-md ">
+                    <h2 className="text-3xl font-bold text-black animate-pulse">
+                        Oops! Post Vanished!
+                    </h2>
+
+                    <p className="text-gray-800 leading-relaxed">
+                        Looks like the post you’re hunting for has gone on an adventure of its own!
+                    </p>
+
+                    <div className="pt-6">
+                        <a
+                            href="/"
+                            className="inline-block bg-black hover:bg-gray-900 text-white px-4 txet-sm rounded-md py-1 transition-colors duration-200 transform hover:scale-105"
+                        >
+                            Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        );
+
     return (
-        <div className='m-4 lg:mx-[25%] md:mx-4 flex flex-col  '>
+
+
+        <div className='m-4 mt-20 lg:mx-[25%] md:mx-4 flex flex-col  '>
             <div className='flex flex-row justify-between items-center'>
                 <button
-                    onClick={() => { navigate('/') }}
+                    onClick={handleBack}
                     className='px-2 py-2 flex flex-row gap-2  text-xs rounded-lg hover:bg-gray-200'>
                     <ArrowLeft className='pt-1' size={14} />
                     <h1>back to posts</h1>
@@ -17,9 +109,9 @@ const MainPost = () => {
                     <div className='bg-gray-200 p-2 w-9 rounded-full'><User size={20} className='  ' /></div>
                     <div className='flex flex-col text-xs m-1'>
                         <h4>
-                            John Doe
+                            {post.authorName}
                         </h4>
-                        <p className=' text-[9px] text-gray-500'>20 jan 2025</p>
+                        <p className=' text-[9px] text-gray-500'>{formatDateToReadableString(post.timestamp)}</p>
                     </div>
                 </div>
             </div>
@@ -27,21 +119,17 @@ const MainPost = () => {
 
                 <div className='m-2'>
                     <h2 className='text-lg'>
-                        The Future of Web Development: Trends to Watch in 2025
+                        {post.title}
                     </h2>
                     <h4 className='text text-gray-500'>
-                        The web development landscape is constantly evolving, and 2025 promises to bring exciting new trends that will reshape how we build
+                        {post.description}
                     </h4>
                     <div className='flex flex-row gap-2 mt-2'>
-                        <span className="inline-block bg-gray-200 text-black text-xs  px-2.5 py-0.5 rounded-full">
-                            New
-                        </span>
-                        <span class="inline-block bg-gray-200 text-black text-xs  px-2.5 py-0.5 rounded-full">
-                            New
-                        </span>
-                        <span class="inline-block bg-gray-200 text-black text-xs  px-2.5 py-0.5 rounded-full">
-                            New
-                        </span>
+                        {post?.tags?.map((tag) => (
+                            <span key={tag} className="inline-block bg-gray-200 text-black text-xs  px-2.5 py-0.5 rounded-full">
+                                {tag}
+                            </span>
+                        ))}
 
 
                     </div>
@@ -49,53 +137,18 @@ const MainPost = () => {
 
             </div>
             <div className='m-4'>
-                <p className='text-sm'>
-                    Introduction
-
-                    The web development landscape is constantly evolving, and 2025 promises to bring exciting new trends that will reshape how we build and interact with web applications. In this comprehensive guide, we'll explore the most significant developments that developers should keep an eye on.
-
-
-                    1. AI-Powered Development Tools
-
-                    Artificial Intelligence is revolutionizing the way we write code. From intelligent code completion to automated testing and bug detection, AI tools are becoming indispensable for modern developers.
-
-
-                    Key Benefits:
-                    Faster Development: AI can generate boilerplate code and suggest optimizations
-                    Better Code Quality: Automated code reviews and bug detection
-                    Enhanced Productivity: Intelligent refactoring and code generation
-
-                    2. Progressive Web Apps (PWAs) Evolution
-
-                    PWAs continue to bridge the gap between web and native applications. With improved browser support and new capabilities, PWAs are becoming more powerful than ever.
-
-
-                    Latest Features:
-                    Advanced offline capabilities
-                    Better device integration
-                    Improved performance metrics
-                    Enhanced security features
-
-                    3. Edge Computing and CDN Evolution
-
-                    The rise of edge computing is changing how we think about web performance and data delivery. By processing data closer to users, we can achieve unprecedented speed and reliability.
-
-
-                    Conclusion
-
-                    As we move through 2025, these trends will continue to shape the future of web development. Staying informed and adapting to these changes will be crucial for developers who want to remain competitive in this rapidly evolving field.
-
-
-                    The key is to start experimenting with these technologies now, so you're prepared when they become mainstream. Which of these trends are you most excited about?
-                </p>
+                <div
+                    className="preview-content rounded-md min-h-[200px] text-xs"
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                />
             </div>
             <div className='border-t border-b border-gray-200 p-4 m-2'>
-                <button  onClick={()=>{navigate('comment')}} className='flex flex-row gap-2 cursor-pointer'>
+                <button onClick={() => { navigate('comment') }} className='flex flex-row gap-2 cursor-pointer'>
                     <MessageCircle size={18} color="#99a1af" />
-                    <p className='text-sm text-gray-500'>2 Comments</p>
+                    <p className='text-sm text-gray-500'>{commentCount} Comments</p>
                 </button>
             </div>
-            <Outlet/>
+            <Outlet />
         </div>
     )
 }
