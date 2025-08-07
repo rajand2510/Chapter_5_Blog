@@ -20,7 +20,8 @@ const Navbar = () => {
           className='flex flex-row gap-2 mt-1 hover:bg-gray-200 rounded-md px-4 py-2'
         >
           <House size={16} className='mt-1' />
-          <h3>Home</h3>
+        <h3 className="hidden lg:block">Home</h3>
+
         </button>
 
         {user ? (
@@ -29,7 +30,7 @@ const Navbar = () => {
             className='flex flex-row mt-1 gap-2 py-2 px-4 '
           >
             <UserRound className='rounded-md hover:bg-gray-200' size={18} />
-            <h3>{user.name}</h3>
+             <h3 className="hidden lg:block">{user.name}</h3>
           </button>
         ) : (
           <div className='py-1 flex flex-row gap-2'>

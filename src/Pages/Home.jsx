@@ -108,7 +108,7 @@ useEffect(() => {
             <div className="m-2">
               <h2>{post.title}</h2>
               <h4 className="text-sm text-gray-500">{post.description}</h4>
-              <div className="flex flex-row gap-2 mt-2">
+              <div className="flex flex-row flex-wrap gap-2 mt-2">
                 {post.tags?.map((tag, i) => (
                   <span
                     key={i}
