@@ -49,7 +49,7 @@ const UserProfile = () => {
     try {
 
 
-      await axios.delete(`http://localhost:5000/api/posts/delete/${postId}`);
+      await axios.delete(`https://blog-backend-ly16.onrender.com/api/posts/delete/${postId}`);
       toast.success('Post deleted successfully!');
 
       // Update posts state by filtering out deleted post
@@ -78,11 +78,11 @@ const UserProfile = () => {
     try {
       if (isEditOpen && editingPostId) {
 
-        await axios.put(`http://localhost:5000/api/posts/update/${editingPostId}`, postData);
+        await axios.put(`https://blog-backend-ly16.onrender.com/api/posts/update/${editingPostId}`, postData);
         toast.success('Post updated successfully!');
       } else {
 
-        await axios.post('http://localhost:5000/api/posts/create', postData);
+        await axios.post('https://blog-backend-ly16.onrender.com/api/posts/create', postData);
         toast.success('Post published successfully!');
       }
 
@@ -126,7 +126,7 @@ const UserProfile = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/posts/user/${user._id}`);
+      const response = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/user/${user._id}`);
       setPosts(response.data);
     } catch (error) {
       console.error('Error fetching user posts:', error);

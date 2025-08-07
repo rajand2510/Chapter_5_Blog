@@ -26,7 +26,7 @@ const MainPost = () => {
     useEffect(() => {
         async function fetchPost() {
             try {
-                const res = await axios.get(`http://localhost:5000/api/posts/${postId}`);
+                const res = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}`);
                 setPost(res.data);
             } catch (err) {
                 console.error('Failed to fetch post:', err);
@@ -37,7 +37,7 @@ const MainPost = () => {
 
         async function fetchCommentCount() {
             try {
-                const res = await axios.get(`http://localhost:5000/api/posts/${postId}/comments/count`);
+                const res = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments/count`);
                 setCommentCount(res.data.count);
             } catch (err) {
                 console.error('Failed to fetch comment count:', err);

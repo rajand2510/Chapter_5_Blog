@@ -16,7 +16,7 @@ const Comment = () => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/posts/${postId}/comments`);
+        const res = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments`);
         setComments(res.data);
       } catch (err) {
         toast.error('Failed to load comments');
@@ -40,7 +40,7 @@ const Comment = () => {
 
   try {
     const res = await axios.post(
-      `http://localhost:5000/api/posts/${postId}/comments`,
+      `https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments`,
       { content: comment },
       {
         headers: {

@@ -28,7 +28,7 @@ export const AuthProivde = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', {
+      const res = await axios.post('https://blog-backend-ly16.onrender.com/api/auth/login', {
         email,
         password,
       });
@@ -43,7 +43,7 @@ export const AuthProivde = ({ children }) => {
 
   const signup = async (name, email, password) => {
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', {
+      await axios.post('https://blog-backend-ly16.onrender.com/api/auth/signup', {
         name,
         email,
         password,
@@ -68,7 +68,7 @@ export const AuthProivde = ({ children }) => {
   // 🔄 Update name function
   const updateName = async (newName) => {
     try {
-      const res = await axios.put('http://localhost:5000/api/auth/update-name', {
+      const res = await axios.put('https://blog-backend-ly16.onrender.com/api/auth/update-name', {
         name: newName,
       });
 
