@@ -122,7 +122,7 @@ const MainPost = () => {
                 <div className='m-2'>
                     <h2 className='text-lg'>{post.title}</h2>
                     <h4 className='text text-gray-500'>{post.description}</h4>
-                    <div className='flex flex-row gap-2 mt-2'>
+                    <div className='flex flex-row flex-wrap gap-2 mt-2'>
                         {memoizedTags}
                     </div>
                 </div>
