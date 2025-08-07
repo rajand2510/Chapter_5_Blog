@@ -11,21 +11,28 @@ const Home = () => {
 
   const searchQuery = searchParams.get('q') || '';
   const [searchTerm, setSearchTerm] = useState(searchQuery);
+useEffect(() => {
+  const cachedPosts = sessionStorage.getItem('all_posts');
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await axios.get('https://blog-backend-ly16.onrender.com/api/posts');
+  if (cachedPosts) {
+    setPosts(JSON.parse(cachedPosts));
+    setLoading(false);
+  } else {
+    axios
+      .get('https://blog-backend-ly16.onrender.com/api/posts')
+      .then((res) => {
         setPosts(res.data);
-      } catch (err) {
+        sessionStorage.setItem('all_posts', JSON.stringify(res.data));
+      })
+      .catch((err) => {
         console.error('Failed to fetch posts:', err);
-      } finally {
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    };
+      });
+  }
+}, []);
 
-    fetchPosts();
-  }, []);
 
   function formatDateToReadableString(isoDateString) {
     const date = new Date(isoDateString);

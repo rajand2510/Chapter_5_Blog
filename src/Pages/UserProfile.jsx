@@ -112,28 +112,33 @@ const UserProfile = () => {
     setTags([]);
     setBlogContent('')
   }
-  useEffect(() => {
+useEffect(() => {
+  const fetchPosts = async () => {
+    if (!user || !user._id) return;
 
-    fetchUserPosts();
-  }, [user]);
+    setLoading(true);
 
-  const fetchUserPosts = async () => {
-    if (!user || !user._id) {
+    const cachedPosts = sessionStorage.getItem(`posts_${user._id}`);
+    if (cachedPosts) {
+      setPosts(JSON.parse(cachedPosts));
       setLoading(false);
       return;
     }
 
-    setLoading(true);
-
     try {
       const response = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/user/${user._id}`);
       setPosts(response.data);
+      sessionStorage.setItem(`posts_${user._id}`, JSON.stringify(response.data));
     } catch (error) {
       console.error('Error fetching user posts:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  fetchPosts();
+}, [user?.id]);
+
 
   const handleSave = () => {
     if (name && name !== user.name) {
@@ -239,7 +244,12 @@ const UserProfile = () => {
 
 
       {loading ? (
-        <p>Loading posts...</p>
+        <div className="flex justify-center items-center py-10">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black" />
+            <span className="text-sm text-gray-700 font-medium">Loading posts...</span>
+          </div>
+        </div>
       ) : (
         sortedPosts.map(post =>
           <div key={post._id}

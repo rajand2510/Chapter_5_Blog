@@ -7,9 +7,13 @@ import { BrowserRouter } from 'react-router-dom'
 
 
 createRoot(document.getElementById('root')).render(
+  
   <BrowserRouter>
   <AuthProivde>
-    <App />
+    <StrictMode>
+      <App />
+    </StrictMode>
   </AuthProivde>
 </BrowserRouter>
+
 )

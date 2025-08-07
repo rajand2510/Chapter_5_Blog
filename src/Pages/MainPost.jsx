@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, MessageCircle, User } from 'lucide-react'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -23,32 +23,37 @@ const MainPost = () => {
         }
     };
 
-    useEffect(() => {
-        async function fetchPost() {
-            try {
-                const res = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}`);
+  useEffect(() => {
+    const cachedPost = sessionStorage.getItem(`post_${postId}`);
+    const cachedCommentCount = sessionStorage.getItem(`comment_count_${postId}`);
+
+    if (cachedPost) {
+        setPost(JSON.parse(cachedPost));
+        setLoadingPost(false);
+    } else {
+        axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}`)
+            .then(res => {
                 setPost(res.data);
-            } catch (err) {
-                console.error('Failed to fetch post:', err);
-            } finally {
-                setLoadingPost(false);
-            }
-        }
+                sessionStorage.setItem(`post_${postId}`, JSON.stringify(res.data));
+            })
+            .catch(err => console.error('Failed to fetch post:', err))
+            .finally(() => setLoadingPost(false));
+    }
 
-        async function fetchCommentCount() {
-            try {
-                const res = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments/count`);
+    if (cachedCommentCount) {
+        setCommentCount(cachedCommentCount);
+        setLoadingComments(false);
+    } else {
+        axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments/count`)
+            .then(res => {
                 setCommentCount(res.data.count);
-            } catch (err) {
-                console.error('Failed to fetch comment count:', err);
-            } finally {
-                setLoadingComments(false);
-            }
-        }
+                sessionStorage.setItem(`comment_count_${postId}`, res.data.count);
+            })
+            .catch(err => console.error('Failed to fetch comment count:', err))
+            .finally(() => setLoadingComments(false));
+    }
+}, [postId]);
 
-        fetchPost();
-        fetchCommentCount();
-    }, [postId]);
 
 
     function formatDateToReadableString(isoDateString) {
@@ -143,10 +148,10 @@ const MainPost = () => {
                 />
             </div>
             <div className='border-t border-b border-gray-200 p-4 m-2'>
-                <button onClick={() => { navigate('comment') }} className='flex flex-row gap-2 cursor-pointer'>
+               <Link to="comment" className='flex flex-row gap-2 cursor-pointer'>
                     <MessageCircle size={18} color="#99a1af" />
                     <p className='text-sm text-gray-500'>{commentCount} Comments</p>
-                </button>
+                </Link>
             </div>
             <Outlet />
         </div>

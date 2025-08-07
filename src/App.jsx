@@ -49,10 +49,9 @@ function App() {
           <Route path='/post/:postId' element={
             <motion.div {...pageTransition}><MainPost /></motion.div>
           }>
-            <Route path='/post/:postId/comment' element={
-              <motion.div {...pageTransition}><Comment /></motion.div>
-            } />
+            <Route path='comment' element={<Comment />} />
           </Route>
+
           <Route path="*" element={
             <motion.div {...pageTransition}><NotFound /></motion.div>
           } />
