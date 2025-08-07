@@ -334,7 +334,7 @@ useEffect(() => {
 
                 <button
                   type="button"
-                  className="text-[9px]  font-semibold py-2.5 px-4 bg-black text-white rounded-md hover:bg-gray-800"
+                  className="text-[9px]  font-semibold py-2.5  px-4 bg-black text-white rounded-md hover:bg-gray-800"
                   onClick={() => {
                     if (newTag.trim() && !tags.includes(newTag.trim())) {
                       setTags([...tags, newTag.trim()])
@@ -345,7 +345,7 @@ useEffect(() => {
                   + Add
                 </button>
               </div>
-              <div className='flex flex-row gap-2 mt-2'>
+              <div className='flex flex-row flex-wrap gap-2 mt-2'>
                 {tags && tags.length > 0 && (
                   tags.map((label, index) => (
                     <div
