@@ -8,6 +8,7 @@ import { useAuth } from '../Hooks/useAuth';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ShadowPreview from '../Components/ShadowPreview';
 
 const UserProfile = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -96,7 +97,7 @@ const UserProfile = () => {
       setBlogContent('');
 
 
-      fetchPosts();
+      fetchUserPosts();
 
     } catch (error) {
       toast.error('Something went wrong. Please try again.');
@@ -114,25 +115,20 @@ const UserProfile = () => {
   }
   useEffect(() => {
 
-
-    fetchPosts();
+    fetchUserPosts();
   }, [user]);
-  const fetchPosts = async () => {
-    if (!user || !user._id) return;
 
-    setLoading(true);
-
-    const cachedPosts = sessionStorage.getItem(`posts_${user._id}`);
-    if (cachedPosts) {
-      setPosts(JSON.parse(cachedPosts));
+  const fetchUserPosts = async () => {
+    if (!user || !user._id) {
       setLoading(false);
       return;
     }
 
+    setLoading(true);
+
     try {
       const response = await axios.get(`https://blog-backend-ly16.onrender.com/api/posts/user/${user._id}`);
       setPosts(response.data);
-      sessionStorage.setItem(`posts_${user._id}`, JSON.stringify(response.data));
     } catch (error) {
       console.error('Error fetching user posts:', error);
     } finally {
@@ -244,12 +240,11 @@ const UserProfile = () => {
 
 
       {loading ? (
-        <div className="flex justify-center items-center py-10">
-          <div className="flex items-center gap-3">
-            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-black" />
-            <span className="text-sm text-gray-700 font-medium">Loading posts...</span>
-          </div>
-        </div>
+        
+         <div className="flex justify-center items-center mt-5">
+                <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin"></div>
+                <p>Loading posts...</p>
+            </div>
       ) : (
         sortedPosts.map(post =>
           <div key={post._id}
@@ -334,7 +329,7 @@ const UserProfile = () => {
 
                 <button
                   type="button"
-                  className="text-[9px]  font-semibold py-2.5  px-4 bg-black text-white rounded-md hover:bg-gray-800"
+                  className="text-[9px]  font-semibold py-2.5 px-4 bg-black text-white rounded-md hover:bg-gray-800"
                   onClick={() => {
                     if (newTag.trim() && !tags.includes(newTag.trim())) {
                       setTags([...tags, newTag.trim()])
@@ -345,7 +340,7 @@ const UserProfile = () => {
                   + Add
                 </button>
               </div>
-              <div className='flex flex-row flex-wrap gap-2 mt-2'>
+              <div className='flex flex-row gap-2 mt-2'>
                 {tags && tags.length > 0 && (
                   tags.map((label, index) => (
                     <div
@@ -411,10 +406,8 @@ const UserProfile = () => {
                   </Editor>
                 </EditorProvider>
               ) : (
-                <div
-                  className="preview-content  border border-gray-200 p-4 rounded-md min-h-[200px] text-xs"
-                  dangerouslySetInnerHTML={{ __html: blogContent }}
-                />
+                <ShadowPreview content={blogContent} />
+
               )}
 
               <div className='flex flex-row gap-2 justify-end mt-4'>
@@ -432,7 +425,7 @@ const UserProfile = () => {
                     onClick={handleSubmit}
                     className='text-[9px] font-semibold py-2 px-4 bg-black text-white rounded-md'
                   >
-                    Edit
+                   Save Edit
                   </button>
                 ) : (
                   <button
