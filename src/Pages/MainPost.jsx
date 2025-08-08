@@ -21,36 +21,54 @@ const MainPost = () => {
         }
     }, [navigate]);
 
+const trackView = async (id) => {
+    try {
+        // This will call your backend /view endpoint
+        await axios.post(
+            `https://blog-backend-ly16.onrender.com/api/posts/${id}/view`,
+            {},
+            { withCredentials: true } // ensures cookies/auth token sent if logged in
+        );
+    } catch (err) {
+        console.error("Failed to record view", err);
+    }
+};
+
     useEffect(() => {
-        const cachedPost = sessionStorage.getItem(`post_${postId}`);
-        const cachedCommentCount = sessionStorage.getItem(`comment_count_${postId}`);
+    const cachedPost = sessionStorage.getItem(`post_${postId}`);
+    const cachedCommentCount = sessionStorage.getItem(`comment_count_${postId}`);
 
-        if (cachedPost) {
-            setPost(JSON.parse(cachedPost));
-            setLoadingPost(false);
-        } else {
-            axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}`)
-                .then(res => {
-                    setPost(res.data);
-                    sessionStorage.setItem(`post_${postId}`, JSON.stringify(res.data));
-                })
-                .catch(err => console.error('Failed to fetch post:', err))
-                .finally(() => setLoadingPost(false));
-        }
+    if (cachedPost) {
+        setPost(JSON.parse(cachedPost));
+        setLoadingPost(false);
+    } else {
+        axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}`)
+            .then(res => {
+                setPost(res.data);
+                sessionStorage.setItem(`post_${postId}`, JSON.stringify(res.data));
 
-        if (cachedCommentCount) {
-            setCommentCount(cachedCommentCount);
-            setLoadingComments(false);
-        } else {
-            axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments/count`)
-                .then(res => {
-                    setCommentCount(res.data.count);
-                    sessionStorage.setItem(`comment_count_${postId}`, res.data.count);
-                })
-                .catch(err => console.error('Failed to fetch comment count:', err))
-                .finally(() => setLoadingComments(false));
-        }
-    }, [postId]);
+                // Call backend to track unique view
+                trackView(postId);
+            })
+            .catch(err => console.error('Failed to fetch post:', err))
+            .finally(() => setLoadingPost(false));
+    }
+
+    if (cachedCommentCount) {
+        setCommentCount(cachedCommentCount);
+        setLoadingComments(false);
+    } else {
+        axios.get(`https://blog-backend-ly16.onrender.com/api/posts/${postId}/comments/count`)
+            .then(res => {
+                setCommentCount(res.data.count);
+                sessionStorage.setItem(`comment_count_${postId}`, res.data.count);
+            })
+            .catch(err => console.error('Failed to fetch comment count:', err))
+            .finally(() => setLoadingComments(false));
+    }
+}, [postId]);
+
+
 
     const formattedDate = useMemo(() => {
         if (!post?.timestamp) return '';
