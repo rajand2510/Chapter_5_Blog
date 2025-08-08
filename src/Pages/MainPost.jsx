@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, MessageCircle, User } from 'lucide-react';
 import './User.css';
+import ShadowPreview from '../Components/ShadowPreview';
 
 const MainPost = () => {
     const { postId } = useParams();
@@ -129,10 +130,8 @@ const MainPost = () => {
             </div>
 
             <div className='m-4'>
-                <div
-                    className="preview-content rounded-md min-h-[200px] text-xs"
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                />
+               <ShadowPreview content={post.content} />
+
             </div>
 
             <div className='border-t border-b border-gray-200 p-4 m-2'>

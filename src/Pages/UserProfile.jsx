@@ -96,7 +96,7 @@ const UserProfile = () => {
       setBlogContent('');
 
 
-      fetchUserPosts();
+      fetchPosts();
 
     } catch (error) {
       toast.error('Something went wrong. Please try again.');
@@ -112,7 +112,11 @@ const UserProfile = () => {
     setTags([]);
     setBlogContent('')
   }
-useEffect(() => {
+  useEffect(() => {
+
+
+    fetchPosts();
+  }, [user]);
   const fetchPosts = async () => {
     if (!user || !user._id) return;
 
@@ -135,10 +139,6 @@ useEffect(() => {
       setLoading(false);
     }
   };
-
-  fetchPosts();
-}, [user?.id]);
-
 
   const handleSave = () => {
     if (name && name !== user.name) {
