@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { User, SquarePen, Trash, X } from 'lucide-react'
+import { User, SquarePen, Trash, X, EyeIcon } from 'lucide-react'
 import { Editor, EditorProvider } from 'react-simple-wysiwyg';
 import { Toolbar, BtnBold, BtnStyles, BtnItalic, BtnUnderline, BtnBulletList, BtnNumberedList, BtnLink, BtnRedo, BtnUndo, BtnStrikeThrough, BtnClearFormatting, HtmlButton, Separator } from 'react-simple-wysiwyg';
 import './User.css'
@@ -273,10 +273,15 @@ const UserProfile = () => {
 
             <div className='mx-2'>
               <div className='flex flex-row gap-2 font-medium'>
+                 <button className="flex flex-row border border-gray-200  text-black text-xs px-2.5 gap-2 py-1 rounded-md" 
+                >
+                  <EyeIcon size={16} /> <p>{post.views}</p>
+                </button>
                 <button className="flex flex-row border border-gray-200 hover:bg-gray-200 text-black text-xs px-2.5 gap-2 py-1 rounded-md" onClick={() => handleEditOpen(post._id, post.title, post.description, post.tags, post.content)}
                 >
                   <SquarePen size={16} /> <p>Edit</p>
                 </button>
+               
                 <button onClick={() => handleDeletePost(post._id)} className="flex flex-row border border-gray-200 hover:bg-gray-200 text-black text-xs px-2.5 gap-2 py-1 rounded-md">
                   <Trash size={16} /> <p>Delete</p>
                 </button>
